@@ -2,6 +2,8 @@
 import streamlit as st
 import time
 import random
+import matplotlib.pyplot as plt
+import numpy as np
 
 def cumulative_sum_iterative(numbers):
     """Menghitung jumlah kumulatif dari array angka menggunakan iterasi dengan kompleksitas tambahan."""
@@ -36,6 +38,18 @@ def cumulative_sum_recursive(numbers, index=0, current_sum=0, result=None):
 def generate_random_numbers(count, min_val=1, max_val=100):
     """Menghasilkan daftar angka acak."""
     return [random.randint(min_val, max_val) for _ in range(count)]
+
+def plot_graph(x, y_iterative, y_recursive):
+    """Menampilkan grafik hasil iteratif dan rekursif."""
+    plt.figure(figsize=(10, 6))
+    plt.plot(x, y_iterative, label='Iterative', marker='o', color='blue')
+    plt.plot(x, y_recursive, label='Recursive', marker='x', color='green')
+    plt.title('Cumulative Sum: Iterative vs Recursive')
+    plt.xlabel('Index')
+    plt.ylabel('Cumulative Sum')
+    plt.legend()
+    plt.grid(True)
+    st.pyplot(plt)
 
 # Judul aplikasi
 st.title("Penjumlahan Berantai (Cumulative Sum)")
@@ -76,5 +90,9 @@ if st.button("Generate Angka dan Hitung"):
         st.write(f"Waktu Eksekusi Rekursif: {recursive_time:.6f} detik")
 
         st.info(f"Selisih Waktu Eksekusi: {time_difference:.6f} detik")
+
+        # Plot grafik
+        x = np.arange(1, len(numbers) + 1)
+        plot_graph(x, result_iterative, result_recursive)
     except ValueError:
         st.error("Terjadi kesalahan saat menghitung jumlah kumulatif.")
