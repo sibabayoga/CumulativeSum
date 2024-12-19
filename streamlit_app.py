@@ -4,21 +4,28 @@ import time
 import random
 
 def cumulative_sum_iterative(numbers):
-    """Menghitung jumlah kumulatif dari array angka menggunakan iterasi."""
+    """Menghitung jumlah kumulatif dari array angka menggunakan iterasi dengan kompleksitas tambahan."""
     cumulative = []
     current_sum = 0
     for number in numbers:
+        # Tambahkan perhitungan tambahan untuk meningkatkan kompleksitas
+        for _ in range(len(numbers)):
+            current_sum += 0  # Operasi dummy untuk meningkatkan waktu proses
         current_sum += number
         cumulative.append(current_sum)
     return cumulative
 
 def cumulative_sum_recursive(numbers, index=0, current_sum=0, result=None):
-    """Menghitung jumlah kumulatif dari array angka menggunakan rekursi."""
+    """Menghitung jumlah kumulatif dari array angka menggunakan rekursi dengan kompleksitas tambahan."""
     if result is None:
         result = []
 
     if index == len(numbers):  # Base case: jika index melebihi panjang array
         return result
+
+    # Tambahkan perhitungan tambahan untuk meningkatkan kompleksitas
+    for _ in range(len(numbers)):
+        current_sum += 0  # Operasi dummy untuk meningkatkan waktu proses
 
     current_sum += numbers[index]
     result.append(current_sum)
@@ -34,7 +41,7 @@ def generate_random_numbers(count, min_val=1, max_val=100):
 st.title("Penjumlahan Berantai (Cumulative Sum)")
 
 # Deskripsi aplikasi
-st.write("Aplikasi ini menghitung jumlah kumulatif dari serangkaian angka menggunakan algoritma iteratif dan rekursif.")
+st.write("Aplikasi ini menghitung jumlah kumulatif dari serangkaian angka menggunakan algoritma iteratif dan rekursif dengan tambahan kompleksitas.")
 
 # Input jumlah angka
 num_count = st.number_input("Masukkan jumlah angka yang ingin di-generate (RNG):", min_value=1, step=1)
