@@ -1,6 +1,7 @@
 # Streamlit App: Cumulative Sum
 import streamlit as st
 import time
+import random
 
 def cumulative_sum_iterative(numbers):
     """Menghitung jumlah kumulatif dari array angka menggunakan iterasi."""
@@ -25,36 +26,48 @@ def cumulative_sum_recursive(numbers, index=0, current_sum=0, result=None):
     # Panggilan rekursif untuk elemen berikutnya
     return cumulative_sum_recursive(numbers, index + 1, current_sum, result)
 
+def generate_random_numbers(count, min_val=1, max_val=100):
+    """Menghasilkan daftar angka acak."""
+    return [random.randint(min_val, max_val) for _ in range(count)]
+
 # Judul aplikasi
 st.title("Penjumlahan Berantai (Cumulative Sum)")
 
 # Deskripsi aplikasi
 st.write("Aplikasi ini menghitung jumlah kumulatif dari serangkaian angka menggunakan algoritma iteratif dan rekursif.")
 
-# Input dari pengguna
-numbers_input = st.text_input("Masukkan angka, dipisahkan dengan koma (contoh: 1,2,3,4,5):")
+# Input jumlah angka
+num_count = st.number_input("Masukkan jumlah angka yang ingin di-generate (RNG):", min_value=1, step=1)
 
-# Jika tombol hitung ditekan
-if st.button("Hitung"):
+# Jika tombol generate ditekan
+if st.button("Generate Angka dan Hitung"):
     try:
-        # Konversi input menjadi daftar angka
-        numbers = list(map(int, numbers_input.split(',')))
+        # Generate angka secara acak
+        numbers = generate_random_numbers(num_count)
+        st.write(f"Angka yang dihasilkan: {numbers}")
 
         # Hitung menggunakan iterasi
         start_time_iterative = time.time()
         result_iterative = cumulative_sum_iterative(numbers)
         end_time_iterative = time.time()
+        iterative_time = end_time_iterative - start_time_iterative
 
         # Hitung menggunakan rekursi
         start_time_recursive = time.time()
         result_recursive = cumulative_sum_recursive(numbers)
         end_time_recursive = time.time()
+        recursive_time = end_time_recursive - start_time_recursive
+
+        # Hitung selisih waktu
+        time_difference = abs(iterative_time - recursive_time)
 
         # Tampilkan hasil
         st.success(f"Hasil Iteratif: {result_iterative}")
-        st.write(f"Waktu Eksekusi Iteratif: {end_time_iterative - start_time_iterative:.6f} detik")
+        st.write(f"Waktu Eksekusi Iteratif: {iterative_time:.6f} detik")
 
         st.success(f"Hasil Rekursif: {result_recursive}")
-        st.write(f"Waktu Eksekusi Rekursif: {end_time_recursive - start_time_recursive:.6f} detik")
+        st.write(f"Waktu Eksekusi Rekursif: {recursive_time:.6f} detik")
+
+        st.info(f"Selisih Waktu Eksekusi: {time_difference:.6f} detik")
     except ValueError:
-        st.error("Pastikan Anda hanya memasukkan angka yang dipisahkan dengan koma.")
+        st.error("Terjadi kesalahan saat menghitung jumlah kumulatif.")
