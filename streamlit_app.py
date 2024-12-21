@@ -2,6 +2,10 @@ import streamlit as st
 import time
 import random
 import numpy as np
+import sys
+
+# Set batas rekursi lebih tinggi untuk menghindari RecursionError
+sys.setrecursionlimit(10000)
 
 # Fungsi untuk menghitung cumulative sum menggunakan iterasi
 def cumulative_sum_iterative(numbers):
@@ -52,48 +56,53 @@ num_count = st.sidebar.number_input("Jumlah angka (1-5000):", min_value=1, max_v
 # Tombol untuk memulai proses
 if st.sidebar.button("Generate & Calculate"):
     try:
-        # Generate angka acak
-        numbers = generate_random_numbers(num_count)
-        st.write("### 🎲 Angka yang dihasilkan")
-        st.write(numbers)
+        # Validasi input
+        if num_count < 1:
+            st.error("Jumlah angka harus lebih besar dari 0.")
+        else:
+            # Generate angka acak
+            numbers = generate_random_numbers(num_count)
+            st.write("### 🎲 Angka yang dihasilkan")
+            st.write(numbers)
 
-        # Hitung menggunakan iterasi
-        start_time_iterative = time.time()
-        result_iterative = cumulative_sum_iterative(numbers)
-        end_time_iterative = time.time()
-        iterative_time = end_time_iterative - start_time_iterative
+            # Hitung menggunakan iterasi
+            start_time_iterative = time.time()
+            result_iterative = cumulative_sum_iterative(numbers)
+            end_time_iterative = time.time()
+            iterative_time = end_time_iterative - start_time_iterative
 
-        # Hitung menggunakan rekursi
-        start_time_recursive = time.time()
-        result_recursive = cumulative_sum_recursive(numbers)
-        end_time_recursive = time.time()
-        recursive_time = end_time_recursive - start_time_recursive
+            # Hitung menggunakan rekursi
+            start_time_recursive = time.time()
+            result_recursive = cumulative_sum_recursive(numbers)
+            end_time_recursive = time.time()
+            recursive_time = end_time_recursive - start_time_recursive
 
-        # Menampilkan hasil
-        st.write("### 🔢 **Hasil Perhitungan**")
-        col1, col2 = st.columns(2)
-        with col1:
-            st.write("**Metode Iteratif**")
-            st.write(result_iterative)
-            st.success(f"Waktu Eksekusi: {iterative_time:.6f} detik")
+            # Menampilkan hasil
+            st.write("### 🔢 **Hasil Perhitungan**")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.write("**Metode Iteratif**")
+                st.write(result_iterative)
+                st.success(f"Waktu Eksekusi: {iterative_time:.6f} detik")
 
-        with col2:
-            st.write("**Metode Rekursif**")
-            st.write(result_recursive)
-            st.success(f"Waktu Eksekusi: {recursive_time:.6f} detik")
+            with col2:
+                st.write("**Metode Rekursif**")
+                st.write(result_recursive)
+                st.success(f"Waktu Eksekusi: {recursive_time:.6f} detik")
 
-        # Menampilkan perbandingan waktu
-        time_difference = abs(iterative_time - recursive_time)
-        st.info(f"⚡ **Selisih Waktu Eksekusi**: {time_difference:.6f} detik")
+            # Menampilkan perbandingan waktu
+            time_difference = abs(iterative_time - recursive_time)
+            st.info(f"⚡ **Selisih Waktu Eksekusi**: {time_difference:.6f} detik")
 
-        # Visualisasi menggunakan Streamlit
-        st.write("### 📈 **Visualisasi Grafik**")
-        chart_data = {
-            "Index": np.arange(1, len(numbers) + 1),
-            "Iterative": result_iterative,
-            "Recursive": result_recursive,
-        }
-        st.line_chart(chart_data)
+            # Visualisasi menggunakan Streamlit
+            st.write("### 📈 **Visualisasi Grafik**")
+            chart_data = {
+                "Iterative": result_iterative,
+                "Recursive": result_recursive,
+            }
+            st.line_chart(chart_data)
 
-    except ValueError as e:
+    except RecursionError:
+        st.error("Terjadi RecursionError. Cobalah dengan jumlah angka lebih kecil.")
+    except Exception as e:
         st.error(f"Terjadi kesalahan: {e}")
