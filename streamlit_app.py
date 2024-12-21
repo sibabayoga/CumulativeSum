@@ -1,71 +1,61 @@
-# Streamlit App: Cumulative Sum
 import streamlit as st
 import time
 import random
-import matplotlib.pyplot as plt
 import numpy as np
 
+# Fungsi untuk menghitung cumulative sum menggunakan iterasi
 def cumulative_sum_iterative(numbers):
-    """Menghitung jumlah kumulatif dari array angka menggunakan iterasi dengan kompleksitas tambahan."""
+    """Menghitung jumlah kumulatif dari array angka menggunakan iterasi."""
     cumulative = []
     current_sum = 0
     for number in numbers:
-        # Tambahkan perhitungan tambahan untuk meningkatkan kompleksitas
-        for _ in range(len(numbers)):
-            current_sum += 0  # Operasi dummy untuk meningkatkan waktu proses
         current_sum += number
         cumulative.append(current_sum)
     return cumulative
 
+# Fungsi untuk menghitung cumulative sum menggunakan rekursi
 def cumulative_sum_recursive(numbers, index=0, current_sum=0, result=None):
-    """Menghitung jumlah kumulatif dari array angka menggunakan rekursi dengan kompleksitas tambahan."""
+    """Menghitung jumlah kumulatif dari array angka menggunakan rekursi."""
     if result is None:
         result = []
 
-    if index == len(numbers):  # Base case: jika index melebihi panjang array
+    if index == len(numbers):  # Base case
         return result
-
-    # Tambahkan perhitungan tambahan untuk meningkatkan kompleksitas
-    for _ in range(len(numbers)):
-        current_sum += 0  # Operasi dummy untuk meningkatkan waktu proses
 
     current_sum += numbers[index]
     result.append(current_sum)
 
-    # Panggilan rekursif untuk elemen berikutnya
     return cumulative_sum_recursive(numbers, index + 1, current_sum, result)
 
+# Fungsi untuk menghasilkan daftar angka acak
 def generate_random_numbers(count, min_val=1, max_val=100):
     """Menghasilkan daftar angka acak."""
     return [random.randint(min_val, max_val) for _ in range(count)]
 
-def plot_graph(x, y_iterative, y_recursive):
-    """Menampilkan grafik hasil iteratif dan rekursif."""
-    plt.figure(figsize=(10, 6))
-    plt.plot(x, y_iterative, label='Iterative', marker='o', color='blue')
-    plt.plot(x, y_recursive, label='Recursive', marker='x', color='green')
-    plt.title('Cumulative Sum: Iterative vs Recursive')
-    plt.xlabel('Index')
-    plt.ylabel('Cumulative Sum')
-    plt.legend()
-    plt.grid(True)
-    st.pyplot(plt)
-
 # Judul aplikasi
-st.title("Penjumlahan Berantai (Cumulative Sum)")
+st.title("📊 **Cumulative Sum Calculator**")
+st.subheader("Perbandingan Metode Iteratif dan Rekursif")
 
 # Deskripsi aplikasi
-st.write("Aplikasi ini menghitung jumlah kumulatif dari serangkaian angka menggunakan algoritma iteratif dan rekursif dengan tambahan kompleksitas.")
+st.markdown("""
+Aplikasi ini menghitung **jumlah kumulatif** dari serangkaian angka menggunakan dua metode:
+- **Iterative Method**: Menggunakan perulangan.
+- **Recursive Method**: Menggunakan rekursi.
+
+Selain hasil, aplikasi ini juga membandingkan waktu eksekusi dan menampilkan grafik visual.
+""")
 
 # Input jumlah angka
-num_count = st.number_input("Masukkan jumlah angka yang ingin di-generate (RNG):", min_value=1, step=1)
+st.sidebar.header("Pengaturan Input")
+num_count = st.sidebar.number_input("Jumlah angka (1-500):", min_value=1, max_value=500, step=1)
 
-# Jika tombol generate ditekan
-if st.button("Generate Angka dan Hitung"):
+# Tombol untuk memulai proses
+if st.sidebar.button("Generate & Calculate"):
     try:
-        # Generate angka secara acak
+        # Generate angka acak
         numbers = generate_random_numbers(num_count)
-        st.write(f"Angka yang dihasilkan: {numbers}")
+        st.write("### 🎲 Angka yang dihasilkan")
+        st.write(numbers)
 
         # Hitung menggunakan iterasi
         start_time_iterative = time.time()
@@ -79,20 +69,31 @@ if st.button("Generate Angka dan Hitung"):
         end_time_recursive = time.time()
         recursive_time = end_time_recursive - start_time_recursive
 
-        # Hitung selisih waktu
+        # Menampilkan hasil
+        st.write("### 🔢 **Hasil Perhitungan**")
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write("**Metode Iteratif**")
+            st.write(result_iterative)
+            st.success(f"Waktu Eksekusi: {iterative_time:.6f} detik")
+
+        with col2:
+            st.write("**Metode Rekursif**")
+            st.write(result_recursive)
+            st.success(f"Waktu Eksekusi: {recursive_time:.6f} detik")
+
+        # Menampilkan perbandingan waktu
         time_difference = abs(iterative_time - recursive_time)
+        st.info(f"⚡ **Selisih Waktu Eksekusi**: {time_difference:.6f} detik")
 
-        # Tampilkan hasil
-        st.success(f"Hasil Iteratif: {result_iterative}")
-        st.write(f"Waktu Eksekusi Iteratif: {iterative_time:.6f} detik")
+        # Visualisasi menggunakan Streamlit
+        st.write("### 📈 **Visualisasi Grafik**")
+        chart_data = {
+            "Index": np.arange(1, len(numbers) + 1),
+            "Iterative": result_iterative,
+            "Recursive": result_recursive,
+        }
+        st.line_chart(chart_data)
 
-        st.success(f"Hasil Rekursif: {result_recursive}")
-        st.write(f"Waktu Eksekusi Rekursif: {recursive_time:.6f} detik")
-
-        st.info(f"Selisih Waktu Eksekusi: {time_difference:.6f} detik")
-
-        # Plot grafik
-        x = np.arange(1, len(numbers) + 1)
-        plot_graph(x, result_iterative, result_recursive)
-    except ValueError:
-        st.error("Terjadi kesalahan saat menghitung jumlah kumulatif.")
+    except ValueError as e:
+        st.error(f"Terjadi kesalahan: {e}")
