@@ -28,7 +28,7 @@ def cumulative_sum_recursive(numbers, index=0, current_sum=0, result=None):
     return cumulative_sum_recursive(numbers, index + 1, current_sum, result)
 
 # Fungsi untuk menghasilkan daftar angka acak
-def generate_random_numbers(count, min_val=1, max_val=100):
+def generate_random_numbers(count, min_val=1, max_val=1000):
     """Menghasilkan daftar angka acak."""
     return [random.randint(min_val, max_val) for _ in range(count)]
 
@@ -47,7 +47,7 @@ Selain hasil, aplikasi ini juga membandingkan waktu eksekusi dan menampilkan gra
 
 # Input jumlah angka
 st.sidebar.header("Pengaturan Input")
-num_count = st.sidebar.number_input("Jumlah angka (1-500):", min_value=1, max_value=500, step=1)
+num_count = st.sidebar.number_input("Jumlah angka (1-5000):", min_value=1, max_value=5000, step=1)
 
 # Tombol untuk memulai proses
 if st.sidebar.button("Generate & Calculate"):
