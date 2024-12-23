@@ -88,6 +88,10 @@ if st.sidebar.button("Generate & Calculate"):
                 end_time_recursive = time.time()
                 recursive_times.append(end_time_recursive - start_time_recursive)
 
+            # Total waktu eksekusi
+            total_iterative_time = sum(iterative_times)
+            total_recursive_time = sum(recursive_times)
+
             # Membuat DataFrame untuk visualisasi
             df = pd.DataFrame({
                 "Ukuran Input": input_sizes,
@@ -95,10 +99,6 @@ if st.sidebar.button("Generate & Calculate"):
                 "Waktu Rekursif (detik)": recursive_times
             })
 
-            # Konversi kolom ke float
-            df["Waktu Iteratif (detik)"] = df["Waktu Iteratif (detik)"].astype(float)
-            df["Waktu Rekursif (detik)"] = df["Waktu Rekursif (detik)"].astype(float)
-            
             # Menampilkan grafik
             st.write("### 📈 Grafik Perbandingan Waktu Eksekusi vs Ukuran Input")
             st.line_chart(df.set_index("Ukuran Input"))
@@ -106,6 +106,17 @@ if st.sidebar.button("Generate & Calculate"):
             # Menampilkan tabel data waktu eksekusi
             st.write("### 🔢 Data Waktu Eksekusi")
             st.dataframe(df)
+
+            # Menampilkan total waktu eksekusi
+            st.write("### 🕒 Total Waktu Eksekusi")
+            col1, col2 = st.columns(2)
+            with col1:
+                st.write("*Metode Iteratif*")
+                st.success(f"Total Waktu: {total_iterative_time:.6f} detik")
+
+            with col2:
+                st.write("*Metode Rekursif*")
+                st.success(f"Total Waktu: {total_recursive_time:.6f} detik")
 
     except RecursionError:
         st.error("Terjadi RecursionError. Cobalah dengan jumlah angka lebih kecil.")
