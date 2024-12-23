@@ -2,6 +2,7 @@ import streamlit as st
 import time
 import random
 import numpy as np
+import pandas as pd
 import sys
 
 # Set batas rekursi lebih tinggi untuk menghindari RecursionError
@@ -37,14 +38,14 @@ def generate_random_numbers(count, min_val=1, max_val=1000):
     return [random.randint(min_val, max_val) for _ in range(count)]
 
 # Judul aplikasi
-st.title("📊 **Cumulative Sum Calculator**")
+st.title("📊 *Cumulative Sum Calculator*")
 st.subheader("Perbandingan Metode Iteratif dan Rekursif")
 
 # Deskripsi aplikasi
 st.markdown("""
-Aplikasi ini menghitung **jumlah kumulatif** dari serangkaian angka menggunakan dua metode:
-- **Iterative Method**: Menggunakan perulangan.
-- **Recursive Method**: Menggunakan rekursi.
+Aplikasi ini menghitung *jumlah kumulatif* dari serangkaian angka menggunakan dua metode:
+- *Iterative Method*: Menggunakan perulangan.
+- *Recursive Method*: Menggunakan rekursi.
 
 Selain hasil, aplikasi ini juga membandingkan waktu eksekusi dan menampilkan grafik visual.
 """)
@@ -78,31 +79,35 @@ if st.sidebar.button("Generate & Calculate"):
             recursive_time = end_time_recursive - start_time_recursive
 
             # Menampilkan hasil
-            st.write("### 🔢 **Hasil Perhitungan**")
+            st.write("### 🔢 *Hasil Perhitungan*")
             col1, col2 = st.columns(2)
             with col1:
-                st.write("**Metode Iteratif**")
+                st.write("*Metode Iteratif*")
                 st.write(result_iterative)
                 st.success(f"Waktu Eksekusi: {iterative_time:.6f} detik")
 
             with col2:
-                st.write("**Metode Rekursif**")
+                st.write("*Metode Rekursif*")
                 st.write(result_recursive)
                 st.success(f"Waktu Eksekusi: {recursive_time:.6f} detik")
 
             # Menampilkan perbandingan waktu
             time_difference = abs(iterative_time - recursive_time)
-            st.info(f"⚡ **Selisih Waktu Eksekusi**: {time_difference:.6f} detik")
+            st.info(f"⚡ *Selisih Waktu Eksekusi*: {time_difference:.6f} detik")
 
             # Visualisasi menggunakan Streamlit
-            st.write("### 📈 **Visualisasi Grafik**")
-            chart_data = {
+            st.write("### 📈 *Visualisasi Grafik*")
+            
+            # Membuat DataFrame untuk kedua hasil agar dapat digunakan dengan st.line_chart
+            df = pd.DataFrame({
                 "Iterative": result_iterative,
-                "Recursive": result_recursive,
-            }
-            st.line_chart(chart_data)
+                "Recursive": result_recursive
+            })
+
+            # Menampilkan grafik
+            st.line_chart(df)
 
     except RecursionError:
         st.error("Terjadi RecursionError. Cobalah dengan jumlah angka lebih kecil.")
     except Exception as e:
-        st.error(f"Terjadi kesalahan: {e}")
+        st.error(f"Terjadi kesalahan: {e}")
