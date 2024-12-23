@@ -19,18 +19,17 @@ def cumulative_sum_iterative(numbers):
     return cumulative
 
 # Fungsi untuk menghitung cumulative sum menggunakan rekursi
-def cumulative_sum_recursive(numbers, index=0, current_sum=0, result=None):
+def cumulative_sum_recursive(numbers):
     """Menghitung jumlah kumulatif dari array angka menggunakan rekursi."""
-    if result is None:
-        result = []
-
-    if index == len(numbers):  # Base case
-        return result
-
-    current_sum += numbers[index]
-    result.append(current_sum)
-
-    return cumulative_sum_recursive(numbers, index + 1, current_sum, result)
+    if numbers == []:  # Base case
+        return []
+    
+    if numbers[1:] == []:  # Base case untuk 1 elemen
+        return [numbers[0]]
+        
+    # Recursive case
+    small_sum = cumulative_sum_recursive(numbers[:-1])  # Rekursif untuk array tanpa elemen terakhir
+    return small_sum + [small_sum[-1] + numbers[-1]]  # Tambahkan hasil kumulatif terakhir
 
 # Fungsi untuk menghasilkan daftar angka acak
 def generate_random_numbers(count, min_val=1, max_val=1000):
