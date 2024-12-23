@@ -97,21 +97,21 @@ if st.sidebar.button("Generate & Calculate"):
 
             # Visualisasi menggunakan Streamlit
             st.write("### 📈 *Visualisasi Grafik Waktu Eksekusi vs Ukuran Input*")
-            
-            # Menyusun data untuk grafik (Waktu eksekusi vs Ukuran input)
-            input_sizes = [i for i in range(1, num_count + 1)]
-            iterative_times = [iterative_time] * len(input_sizes)
-            recursive_times = [recursive_time] * len(input_sizes)
+
+            # Membuat data untuk waktu eksekusi vs ukuran input
+            input_sizes = [num_count]  # Ukuran input hanya 1 kali (karena kita hanya hitung waktu eksekusi untuk satu ukuran input)
+            iterative_times = [iterative_time]
+            recursive_times = [recursive_time]
 
             # Membuat DataFrame untuk visualisasi
             df = pd.DataFrame({
-                "Input Size": input_sizes,
-                "Iterative Time (detik)": iterative_times,
-                "Recursive Time (detik)": recursive_times
+                "Waktu Eksekusi (detik)": iterative_times + recursive_times,
+                "Ukuran Input": [num_count] * 2  # Menampilkan ukuran input yang sama untuk kedua metode
             })
 
             # Menampilkan grafik
-            st.line_chart(df.set_index("Input Size"))
+            st.write("### 📈 *Grafik Perbandingan Waktu Eksekusi*")
+            st.bar_chart(df.set_index("Ukuran Input"))
 
     except RecursionError:
         st.error("Terjadi RecursionError. Cobalah dengan jumlah angka lebih kecil.")
