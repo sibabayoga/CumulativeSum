@@ -38,14 +38,14 @@ def generate_random_numbers(count, min_val=1, max_val=1000):
     return [random.randint(min_val, max_val) for _ in range(count)]
 
 # Judul aplikasi
-st.title("📊 *Cumulative Sum Calculator*")
+st.title("📊 Cumulative Sum Calculator")
 st.subheader("Perbandingan Metode Iteratif dan Rekursif")
 
 # Deskripsi aplikasi
 st.markdown("""
-Aplikasi ini menghitung *jumlah kumulatif* dari serangkaian angka menggunakan dua metode:
-- *Iterative Method*: Menggunakan perulangan.
-- *Recursive Method*: Menggunakan rekursi.
+Aplikasi ini menghitung jumlah kumulatif dari serangkaian angka menggunakan dua metode:
+- Iterative Method: Menggunakan perulangan.
+- Recursive Method: Menggunakan rekursi.
 
 Selain hasil, aplikasi ini juga membandingkan waktu eksekusi dan menampilkan grafik visual.
 """)
@@ -66,51 +66,42 @@ if st.sidebar.button("Generate & Calculate"):
             st.write("### 🎲 Angka yang dihasilkan")
             st.write(numbers)
 
-            # Hitung menggunakan iterasi
-            start_time_iterative = time.time()
-            result_iterative = cumulative_sum_iterative(numbers)
-            end_time_iterative = time.time()
-            iterative_time = end_time_iterative - start_time_iterative
+            # Menyimpan waktu eksekusi untuk berbagai ukuran input
+            iterative_times = []
+            recursive_times = []
+            input_sizes = list(range(1, num_count + 1))
 
-            # Hitung menggunakan rekursi
-            start_time_recursive = time.time()
-            result_recursive = cumulative_sum_recursive(numbers)
-            end_time_recursive = time.time()
-            recursive_time = end_time_recursive - start_time_recursive
+            # Mengukur waktu eksekusi bertahap untuk setiap ukuran input
+            for size in input_sizes:
+                # Subset angka berdasarkan ukuran input
+                subset_numbers = numbers[:size]
 
-            # Menampilkan hasil
-            st.write("### 🔢 *Hasil Perhitungan*")
-            col1, col2 = st.columns(2)
-            with col1:
-                st.write("*Metode Iteratif*")
-                st.write(result_iterative)
-                st.success(f"Waktu Eksekusi: {iterative_time:.6f} detik")
+                # Iteratif
+                start_time_iterative = time.time()
+                cumulative_sum_iterative(subset_numbers)
+                end_time_iterative = time.time()
+                iterative_times.append(end_time_iterative - start_time_iterative)
 
-            with col2:
-                st.write("*Metode Rekursif*")
-                st.write(result_recursive)
-                st.success(f"Waktu Eksekusi: {recursive_time:.6f} detik")
-
-            # Menampilkan perbandingan waktu
-            time_difference = abs(iterative_time - recursive_time)
-            st.info(f"⚡ *Selisih Waktu Eksekusi*: {time_difference:.6f} detik")
-
-           
-
-            # Membuat data untuk waktu eksekusi vs ukuran input
-            input_sizes = [num_count]  # Ukuran input hanya 1 kali (karena kita hanya hitung waktu eksekusi untuk satu ukuran input)
-            iterative_times = [iterative_time]
-            recursive_times = [recursive_time]
+                # Rekursif
+                start_time_recursive = time.time()
+                cumulative_sum_recursive(subset_numbers)
+                end_time_recursive = time.time()
+                recursive_times.append(end_time_recursive - start_time_recursive)
 
             # Membuat DataFrame untuk visualisasi
             df = pd.DataFrame({
-                "Waktu Eksekusi (detik)": iterative_times + recursive_times,
-                "Ukuran Input": [num_count] * 2  # Menampilkan ukuran input yang sama untuk kedua metode
+                "Ukuran Input": input_sizes,
+                "Waktu Iteratif (detik)": iterative_times,
+                "Waktu Rekursif (detik)": recursive_times
             })
 
             # Menampilkan grafik
-            st.write("### 📈 *Grafik Perbandingan Waktu Eksekusi*")
+            st.write("### 📈 Grafik Perbandingan Waktu Eksekusi vs Ukuran Input")
             st.line_chart(df.set_index("Ukuran Input"))
+
+            # Menampilkan tabel data waktu eksekusi
+            st.write("### 🔢 Data Waktu Eksekusi")
+            st.dataframe(df)
 
     except RecursionError:
         st.error("Terjadi RecursionError. Cobalah dengan jumlah angka lebih kecil.")
