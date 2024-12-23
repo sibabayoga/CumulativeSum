@@ -95,8 +95,7 @@ if st.sidebar.button("Generate & Calculate"):
             time_difference = abs(iterative_time - recursive_time)
             st.info(f"⚡ *Selisih Waktu Eksekusi*: {time_difference:.6f} detik")
 
-            # Visualisasi menggunakan Streamlit
-            st.write("### 📈 *Visualisasi Grafik Waktu Eksekusi vs Ukuran Input*")
+           
 
             # Membuat data untuk waktu eksekusi vs ukuran input
             input_sizes = [num_count]  # Ukuran input hanya 1 kali (karena kita hanya hitung waktu eksekusi untuk satu ukuran input)
@@ -111,7 +110,7 @@ if st.sidebar.button("Generate & Calculate"):
 
             # Menampilkan grafik
             st.write("### 📈 *Grafik Perbandingan Waktu Eksekusi*")
-            st.bar_chart(df.set_index("Ukuran Input"))
+            st.line_chart(df.set_index("Ukuran Input"))
 
     except RecursionError:
         st.error("Terjadi RecursionError. Cobalah dengan jumlah angka lebih kecil.")
