@@ -95,6 +95,10 @@ if st.sidebar.button("Generate & Calculate"):
                 "Waktu Rekursif (detik)": recursive_times
             })
 
+            # Konversi kolom ke float
+            df["Waktu Iteratif (detik)"] = df["Waktu Iteratif (detik)"].astype(float)
+            df["Waktu Rekursif (detik)"] = df["Waktu Rekursif (detik)"].astype(float)
+            
             # Menampilkan grafik
             st.write("### 📈 Grafik Perbandingan Waktu Eksekusi vs Ukuran Input")
             st.line_chart(df.set_index("Ukuran Input"))
