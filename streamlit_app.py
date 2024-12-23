@@ -19,17 +19,18 @@ def cumulative_sum_iterative(numbers):
     return cumulative
 
 # Fungsi untuk menghitung cumulative sum menggunakan rekursi
-def cumulative_sum_recursive(numbers):
+def cumulative_sum_recursive(numbers, index=0, current_sum=0, result=None):
     """Menghitung jumlah kumulatif dari array angka menggunakan rekursi."""
-    if numbers == []:  # Base case
-        return []
-    
-    if numbers[1:] == []:  # Base case untuk 1 elemen
-        return [numbers[0]]
-        
-    # Recursive case
-    small_sum = cumulative_sum_recursive(numbers[:-1])  # Rekursif untuk array tanpa elemen terakhir
-    return small_sum + [small_sum[-1] + numbers[-1]]  # Tambahkan hasil kumulatif terakhir
+    if result is None:
+        result = []
+
+    if index == len(numbers):  # Base case
+        return result
+
+    current_sum += numbers[index]
+    result.append(current_sum)
+
+    return cumulative_sum_recursive(numbers, index + 1, current_sum, result)
 
 # Fungsi untuk menghasilkan daftar angka acak
 def generate_random_numbers(count, min_val=1, max_val=1000):
@@ -110,14 +111,14 @@ if st.sidebar.button("Generate & Calculate"):
             st.write("### 🕒 Total Waktu Eksekusi")
             col1, col2 = st.columns(2)
             with col1:
-                st.write("*Metode Iteratif*")
+                st.write("Metode Iteratif")
                 st.success(f"Total Waktu: {total_iterative_time:.6f} detik")
 
             with col2:
-                st.write("*Metode Rekursif*")
+                st.write("Metode Rekursif")
                 st.success(f"Total Waktu: {total_recursive_time:.6f} detik")
 
     except RecursionError:
         st.error("Terjadi RecursionError. Cobalah dengan jumlah angka lebih kecil.")
     except Exception as e:
-        st.error(f"Terjadi kesalahan: {e}")
+        st.error(f"Terjadi kesalahan: {e}")
