@@ -90,7 +90,7 @@ if st.sidebar.button("Generate & Calculate"):
 
             # Membuat DataFrame untuk visualisasi
             df = pd.DataFrame({
-                "Ukuran Input": input_sizes,
+                "Ukuran Input": numbers,
                 "Waktu Iteratif (detik)": iterative_times,
                 "Waktu Rekursif (detik)": recursive_times
             })
